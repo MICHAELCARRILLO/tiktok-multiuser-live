@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Cámara</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="/comun.css" />
+    <style>
+      body {
+        background: #000;
+      }
+
+      /* La vista previa muestra el cuadro completo que reciben los celulares, sin recortarlo
+         para llenar la pantalla: en una PC ancha, recortar lo hacía ver muy de cerca. */
+      #vista {
+        object-fit: contain;
+      }
+
+      /* Capa sobre el video: indicador arriba, hoja de controles abajo.
+         Deja pasar los toques al video salvo en sus propios elementos. */
+      .capa {
+        position: fixed;
+        inset: 0;
+        display: grid;
+        grid-template-rows: auto 1fr auto;
+        padding: calc(14px + env(safe-area-inset-top)) 14px 0;
+        pointer-events: none;
+      }
+
+      .capa > * {
+        pointer-events: auto;
+      }
+
+      .indicador {
+        justify-self: start;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        max-width: 100%;
+        padding: 9px 14px;
+        border-radius: 999px;
+        background: var(--velo);
+        font-size: 15px;
+        font-weight: 600;
+      }
+
+      .hoja {
+        grid-row: 3;
+        display: grid;
+        gap: 12px;
+        margin: 0 -14px;
+        padding: 18px 16px calc(18px + env(safe-area-inset-bottom));
+        border-radius: 16px 16px 0 0;
+        background: var(--velo);
+      }
+
+      .fila {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+
+      .campo {
+        display: grid;
+        gap: 6px;
+        color: var(--texto-claro-suave);
+        font-size: 14px;
+      }
+
+      .aviso-error {
+        padding: 10px 12px;
+        border-radius: var(--radio-control);
+        background: rgba(211, 39, 29, 0.22);
+        color: #ffd2cd;
+        font-size: 14px;
+      }
+
+      .pista {
+        color: var(--texto-claro-suave);
+        font-size: 13px;
+      }
+
+      .boton-flotante {
+        position: fixed;
+        left: 50%;
+        bottom: calc(24px + env(safe-area-inset-bottom));
+        transform: translateX(-50%);
+        white-space: nowrap;
+        background: var(--velo) !important;
+      }
+    </style>
+  </head>
+  <body class="sobre-video">
+    <main class="lienzo" id="lienzo">
+      <video id="vista" autoplay playsinline muted></video>
+    </main>
+
+    <div class="capa" id="controles">
+      <p class="indicador" aria-live="polite"><span class="lampara" id="punto"></span><span id="estado">Cámara apagada</span></p>
+
+      <section class="hoja">
+        <p class="aviso-error" id="error" hidden></p>
+        <div class="fila">
+          <label class="campo">
+            Lente
+            <select class="selector" id="lente">
+              <option value="user">Frontal</option>
+              <option value="environment">Trasera</option>
+            </select>
+          </label>
+          <label class="campo">
+            Calidad
+            <select class="selector" id="calidad">
+              <option value="720">720p</option>
+              <option value="1080">1080p</option>
+            </select>
+          </label>
+        </div>
+        <button class="boton boton-principal" id="iniciar">Iniciar cámara</button>
+        <button class="boton" id="espejo" hidden>Espejo: no</button>
+        <div class="fila" id="acciones" hidden>
+          <button class="boton" id="microfono">Silenciar micrófono</button>
+          <button class="boton" id="limpia">Pantalla limpia</button>
+        </div>
+        <button class="boton boton-peligro" id="detener" hidden>Detener cámara</button>
+        <p class="pista" id="pista" hidden>
+          Pantalla limpia oculta los controles por si este celular también hace live. Para recuperarlos, toca la pantalla.
+        </p>
+      </section>
+    </div>
+
+    <button class="boton boton-flotante" id="mostrar" hidden>Mostrar controles</button>
+
+    <script type="module" src="/camara.js"></script>
+  </body>
+</html>

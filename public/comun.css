@@ -1,0 +1,219 @@
+/* Consola de estudio: aluminio claro, tinta verde muy oscura y luces de estado.
+   El rojo se reserva para la señal que está saliendo al aire. */
+@font-face {
+  font-family: "Archivo";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  font-stretch: 62% 125%;
+  src: url("/fuentes/archivo.woff2") format("woff2-variations");
+}
+
+:root {
+  color-scheme: light;
+  --aluminio: #e4e7e3;
+  --placa: #f5f6f3;
+  --placa-alta: #fbfcfa;
+  --tinta: #15201b;
+  --gris: #5b6660;
+  --linea: #c8cec8;
+  --aire: #d3271d;
+  --senal: #1e8456;
+  --ambar: #b97f0e;
+  --velo: rgba(21, 32, 27, 0.9);
+  --texto-claro: #eef1ed;
+  --texto-claro-suave: #aab4ae;
+  --radio-control: 6px;
+  --radio-seccion: 10px;
+  font-family: "Archivo", "Segoe UI", system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.45;
+  font-variant-numeric: tabular-nums;
+  -webkit-font-smoothing: antialiased;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  background: var(--aluminio);
+  color: var(--tinta);
+  -webkit-text-size-adjust: 100%;
+}
+
+h1,
+h2,
+p {
+  margin: 0;
+}
+
+h1,
+h2 {
+  font-stretch: 118%;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+}
+
+button,
+select,
+a {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 3px solid var(--tinta);
+  outline-offset: 2px;
+}
+
+/* Botones */
+.boton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 10px 16px;
+  border: 1px solid var(--linea);
+  border-radius: var(--radio-control);
+  background: var(--placa-alta);
+  font-weight: 560;
+  font-size: 15px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.boton:hover {
+  border-color: var(--tinta);
+}
+
+.boton:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.boton-principal {
+  border-color: var(--tinta);
+  background: var(--tinta);
+  color: var(--aluminio);
+}
+
+.boton-principal:hover {
+  background: #22322b;
+}
+
+/* Selector con flecha propia, igual en todos los navegadores */
+.selector {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 40px 10px 12px;
+  border: 1px solid var(--linea);
+  border-radius: var(--radio-control);
+  background: var(--placa-alta)
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%2315201b' stroke-width='1.6'/%3E%3C/svg%3E")
+    no-repeat right 14px center;
+  appearance: none;
+  cursor: pointer;
+}
+
+/* Luz de estado, como la de una cámara de estudio */
+.lampara {
+  display: inline-block;
+  flex: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--linea);
+  box-shadow: inset 0 0 0 1px rgba(21, 32, 27, 0.18);
+}
+
+.lampara.senal {
+  background: var(--senal);
+}
+
+.lampara.espera {
+  background: var(--ambar);
+}
+
+.lampara.aire {
+  background: var(--aire);
+  box-shadow: 0 0 0 4px rgba(211, 39, 29, 0.18);
+  animation: latido-aire 2.4s ease-in-out infinite;
+}
+
+@keyframes latido-aire {
+  50% {
+    box-shadow: 0 0 0 7px rgba(211, 39, 29, 0.06);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lampara.aire {
+    animation: none;
+  }
+}
+
+/* Pantallas de video a sangre: cámara y transmisor */
+.lienzo {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  background: #000;
+  /* En iPhone, sin esto algunos toques sobre el video no generan el evento click. */
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.lienzo video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: #000;
+}
+
+/* Paneles oscuros que flotan sobre el video */
+.sobre-video {
+  color: var(--texto-claro);
+}
+
+.sobre-video :focus-visible {
+  outline-color: var(--texto-claro);
+}
+
+.sobre-video .boton {
+  border-color: rgba(238, 241, 237, 0.24);
+  background: rgba(238, 241, 237, 0.08);
+}
+
+.sobre-video .boton:hover {
+  border-color: var(--texto-claro);
+}
+
+.sobre-video .boton-principal {
+  border-color: var(--texto-claro);
+  background: var(--texto-claro);
+  color: var(--tinta);
+}
+
+.sobre-video .boton-peligro {
+  border-color: rgba(255, 120, 108, 0.5);
+  color: #ff8a7f;
+}
+
+.sobre-video .selector {
+  border-color: rgba(238, 241, 237, 0.24);
+  background-color: rgba(238, 241, 237, 0.08);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%23eef1ed' stroke-width='1.6'/%3E%3C/svg%3E");
+  color: var(--texto-claro);
+}
+
+.sobre-video .selector option {
+  background: var(--tinta);
+}
+
+[hidden] {
+  display: none !important;
+}

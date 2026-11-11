@@ -1,0 +1,24 @@
+{
+  "name": "tiktok-multiuser-live",
+  "version": "0.1.0",
+  "description": "Reparte una sola cámara a varios celulares por la red local.",
+  "private": true,
+  "type": "module",
+  "main": "src/servidor.js",
+  "scripts": {
+    "start": "node src/servidor.js",
+    "prueba": "node pruebas/cadena-completa.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@fontsource-variable/archivo": "^5.3.0",
+    "qrcode": "^1.5.4",
+    "selfsigned": "^5.5.0",
+    "werift": "^0.26.0"
+  },
+  "devDependencies": {
+    "playwright-core": "^1.64.1"
+  }
+}

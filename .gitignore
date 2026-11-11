@@ -1,0 +1,5 @@
+node_modules/
+# Contiene el token de acceso y la clave privada del certificado local.
+data/
+# Valores propios del servidor (dominio, IP). Usa .env.example como plantilla.
+.env

@@ -1,0 +1,26 @@
+# Reparto de cámara hosteado (modo internet).
+# Copia .env.example a .env y pon tus valores. Pon un proxy con HTTPS (p. ej. Caddy)
+# por delante, apuntando a 127.0.0.1:${PUERTO_APP}. El video (UDP) va directo al servidor.
+services:
+  tiktok-live:
+    build: .
+    image: tiktok-live
+    container_name: tiktok-live
+    restart: unless-stopped
+    environment:
+      URL_PUBLICA: ${URL_PUBLICA}
+      IP_PUBLICA: ${IP_PUBLICA}
+      ICE_PUERTO_MIN: ${ICE_PUERTO_MIN:-40000}
+      ICE_PUERTO_MAX: ${ICE_PUERTO_MAX:-40030}
+      PUERTO_APP: 8099
+      DATOS: /datos
+    volumes:
+      - tiktok-datos:/datos
+    ports:
+      # HTTP interno: solo local, para que tu proxy (Caddy/nginx) lo alcance.
+      - "127.0.0.1:${PUERTO_APP:-8099}:8099"
+      # Video (UDP) 1:1: ábrelo también en el firewall del servidor.
+      - "${ICE_PUERTO_MIN:-40000}-${ICE_PUERTO_MAX:-40030}:${ICE_PUERTO_MIN:-40000}-${ICE_PUERTO_MAX:-40030}/udp"
+
+volumes:
+  tiktok-datos:

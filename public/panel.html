@@ -1,0 +1,366 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Reparto de cámara</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="/comun.css" />
+    <style>
+      .marco {
+        display: grid;
+        gap: 28px;
+        width: min(1120px, 100%);
+        margin: 0 auto;
+        padding: 36px 24px 64px;
+      }
+
+      .cabecera {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 12px 24px;
+      }
+
+      .cabecera h1 {
+        font-size: clamp(26px, 3.2vw, 34px);
+        font-weight: 720;
+        font-stretch: 125%;
+      }
+
+      .resumen {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 14px;
+        border: 1px solid var(--linea);
+        border-radius: 999px;
+        background: var(--placa);
+        font-weight: 600;
+      }
+
+      /* Mapa de señal: cámara, esta PC y los celulares, unidos por cables */
+      .mapa {
+        display: grid;
+        grid-template-columns: minmax(190px, 1fr) 48px minmax(170px, 0.85fr) 48px minmax(240px, 1.35fr);
+        align-items: center;
+        padding: 28px;
+        border: 1px solid var(--linea);
+        border-radius: var(--radio-seccion);
+        background: var(--placa);
+      }
+
+      .nodo {
+        display: grid;
+        gap: 4px;
+        padding: 16px 18px;
+        border: 1px solid var(--linea);
+        border-radius: var(--radio-control);
+        background: var(--placa-alta);
+      }
+
+      .nodo-encabezado {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .nodo-nombre {
+        font-size: 18px;
+        font-weight: 650;
+        font-stretch: 112%;
+      }
+
+      .nodo-detalle {
+        color: var(--gris);
+        font-size: 14px;
+      }
+
+      .cable {
+        height: 2px;
+        background: var(--linea);
+      }
+
+      .cable.vivo {
+        background: var(--tinta);
+      }
+
+      .destinos {
+        position: relative;
+        display: grid;
+        gap: 10px;
+        margin: 0;
+        padding: 0 0 0 22px;
+        border-left: 2px solid var(--linea);
+        list-style: none;
+      }
+
+      .destinos.vivo {
+        border-left-color: var(--tinta);
+      }
+
+      .destinos li {
+        position: relative;
+      }
+
+      .destinos li::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: -24px;
+        width: 22px;
+        height: 2px;
+        background: inherit;
+        background: var(--linea);
+      }
+
+      .destinos.vivo li.recibiendo::before {
+        background: var(--tinta);
+      }
+
+      .destino {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 16px;
+        border: 1px solid var(--linea);
+        border-radius: var(--radio-control);
+        background: var(--placa-alta);
+      }
+
+      .destino .nodo-detalle {
+        margin-left: auto;
+      }
+
+      .destino-vacio {
+        padding: 14px 16px;
+        border: 1px dashed var(--linea);
+        border-radius: var(--radio-control);
+        color: var(--gris);
+        font-size: 15px;
+      }
+
+      /* Conexión de equipos */
+      .red {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 10px 16px;
+      }
+
+      .red label {
+        font-weight: 560;
+      }
+
+      .red .selector {
+        width: auto;
+        min-width: min(360px, 100%);
+      }
+
+      .conexiones {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 20px;
+      }
+
+      .conexion {
+        display: grid;
+        grid-template-columns: 168px minmax(0, 1fr);
+        gap: 22px;
+        align-items: start;
+        padding: 24px;
+        border: 1px solid var(--linea);
+        border-radius: var(--radio-seccion);
+        background: var(--placa);
+      }
+
+      .conexion h2 {
+        font-size: 19px;
+        font-weight: 680;
+      }
+
+      .conexion-texto {
+        display: grid;
+        gap: 12px;
+      }
+
+      .conexion p,
+      .guia li {
+        color: var(--gris);
+        font-size: 15px;
+        line-height: 1.5;
+        max-width: 52ch;
+      }
+
+      .qr {
+        display: block;
+        width: 168px;
+        height: 168px;
+        padding: 8px;
+        border: 1px solid var(--linea);
+        border-radius: 4px;
+        background: #fff;
+      }
+
+      .botones {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      /* Guía de primera vez: es una secuencia, por eso va numerada */
+      .guia {
+        display: grid;
+        gap: 14px;
+        padding-top: 4px;
+      }
+
+      .guia h2 {
+        font-size: 19px;
+        font-weight: 680;
+      }
+
+      .guia ol {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 20px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        counter-reset: paso;
+      }
+
+      .guia li {
+        counter-increment: paso;
+      }
+
+      .guia li::before {
+        content: counter(paso);
+        display: grid;
+        place-items: center;
+        width: 28px;
+        height: 28px;
+        margin-bottom: 10px;
+        border: 1.5px solid var(--tinta);
+        border-radius: 50%;
+        color: var(--tinta);
+        font-weight: 650;
+        font-size: 14px;
+      }
+
+      .guia b {
+        color: var(--tinta);
+        font-weight: 620;
+      }
+
+      @media (max-width: 980px) {
+        .conexiones,
+        .guia ol {
+          grid-template-columns: minmax(0, 1fr);
+        }
+      }
+
+      @media (max-width: 760px) {
+        .marco {
+          gap: 22px;
+          padding: 24px 16px 48px;
+        }
+
+        .mapa {
+          grid-template-columns: minmax(0, 1fr);
+          padding: 18px;
+        }
+
+        .cable {
+          width: 2px;
+          height: 22px;
+          margin-left: 24px;
+        }
+
+        .destinos {
+          margin-left: 24px;
+        }
+      }
+
+      @media (max-width: 460px) {
+        .conexion {
+          grid-template-columns: minmax(0, 1fr);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="marco">
+      <header class="cabecera">
+        <h1>Reparto de cámara</h1>
+        <p class="resumen" id="resumen" aria-live="polite">
+          <span class="lampara" id="resumenLampara"></span><span id="resumenTexto">Conectando con el programa…</span>
+        </p>
+      </header>
+
+      <section class="mapa" aria-label="Recorrido de la señal">
+        <div class="nodo">
+          <div class="nodo-encabezado">
+            <span class="lampara" id="camaraLampara"></span><span class="nodo-nombre">Cámara</span>
+          </div>
+          <span class="nodo-detalle" id="camaraDetalle">Sin conectar</span>
+          <span class="nodo-detalle" id="camaraTasa"></span>
+        </div>
+        <div class="cable" id="cable1"></div>
+        <div class="nodo">
+          <div class="nodo-encabezado">
+            <span class="lampara senal"></span><span class="nodo-nombre" id="pcNombre">Esta PC</span>
+          </div>
+          <span class="nodo-detalle" id="pcDetalle">Repartiendo la señal</span>
+        </div>
+        <div class="cable" id="cable2"></div>
+        <ul class="destinos" id="destinos"></ul>
+      </section>
+
+      <div class="red">
+        <label for="red">Los celulares se conectan por</label>
+        <select class="selector" id="red"></select>
+      </div>
+
+      <div class="conexiones">
+        <section class="conexion">
+          <img class="qr" id="qrCamara" alt="Código QR para conectar el celular cámara" />
+          <div class="conexion-texto">
+            <h2>Conectar la cámara</h2>
+            <p>Escanéalo con el celular que te va a filmar. Si conectas otra cámara, esta reemplaza a la anterior.</p>
+            <div class="botones">
+              <button class="boton" id="copiarCamara">Copiar enlace</button>
+              <a class="boton" id="webcam" target="_blank" rel="noopener">Usar la webcam de esta PC</a>
+            </div>
+          </div>
+        </section>
+
+        <section class="conexion">
+          <img class="qr" id="qrTransmisor" alt="Código QR para conectar los celulares que transmiten" />
+          <div class="conexion-texto">
+            <h2>Conectar celulares que transmiten</h2>
+            <p>Usa este mismo código en cada celular. Cada uno aparece en el mapa al conectarse.</p>
+            <div class="botones">
+              <button class="boton" id="copiarTransmisor">Copiar enlace</button>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <section class="guia">
+        <h2>Primera vez en cada celular</h2>
+        <ol id="guiaPasos">
+          <li>Conéctalo al <b>mismo WiFi</b> que esta PC.</li>
+          <li>
+            Abre el enlace. Si avisa que la conexión no es privada, toca <b>Mostrar detalles</b> y luego
+            <b>visitar este sitio</b>: el certificado lo creó esta PC.
+          </li>
+          <li>En los que transmiten, toca <b>Empezar</b> e inicia el live de TikTok en <b>Gaming</b>.</li>
+          <li>Vuelve a la página y déjala abierta. Si abres otra app, el live mostrará esa app.</li>
+        </ol>
+      </section>
+    </main>
+    <script type="module" src="/panel.js"></script>
+  </body>
+</html>

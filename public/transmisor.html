@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Transmisor</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="/comun.css" />
+    <style>
+      body {
+        background: #000;
+      }
+
+      /* Portada clara con los pasos; desaparece al tocar Empezar */
+      .portada {
+        position: fixed;
+        inset: 0;
+        display: grid;
+        align-content: center;
+        gap: 24px;
+        padding: calc(24px + env(safe-area-inset-top)) 24px calc(24px + env(safe-area-inset-bottom));
+        overflow-y: auto;
+        background: var(--aluminio);
+        color: var(--tinta);
+      }
+
+      .portada-contenido {
+        display: grid;
+        gap: 24px;
+        width: min(420px, 100%);
+        margin: 0 auto;
+      }
+
+      .portada h1 {
+        font-size: 28px;
+        font-weight: 720;
+        font-stretch: 125%;
+      }
+
+      .pasos {
+        display: grid;
+        gap: 16px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        counter-reset: paso;
+      }
+
+      .pasos li {
+        counter-increment: paso;
+        display: grid;
+        grid-template-columns: 28px 1fr;
+        gap: 12px;
+        align-items: start;
+        color: var(--gris);
+        line-height: 1.5;
+      }
+
+      .pasos li::before {
+        content: counter(paso);
+        display: grid;
+        place-items: center;
+        width: 28px;
+        height: 28px;
+        border: 1.5px solid var(--tinta);
+        border-radius: 50%;
+        color: var(--tinta);
+        font-weight: 650;
+        font-size: 14px;
+      }
+
+      .pasos b {
+        color: var(--tinta);
+        font-weight: 620;
+      }
+
+      .portada .boton-principal {
+        min-height: 52px;
+        font-size: 17px;
+      }
+
+      /* Lo que se ve en el live mientras no hay cámara: discreto a propósito */
+      .espera {
+        position: fixed;
+        inset: 0;
+        display: grid;
+        place-content: center;
+        color: var(--texto-claro-suave);
+        font-size: 15px;
+        pointer-events: none;
+      }
+
+      .info {
+        position: fixed;
+        top: calc(12px + env(safe-area-inset-top));
+        left: 12px;
+        right: 12px;
+        display: grid;
+        gap: 10px;
+        padding: 14px;
+        border-radius: 14px;
+        background: var(--velo);
+      }
+
+      .info-estado {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 600;
+      }
+
+      .info-botones {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+
+    </style>
+  </head>
+  <body>
+    <main class="lienzo" id="lienzo">
+      <video id="video" autoplay playsinline></video>
+    </main>
+
+    <div class="espera" id="espera" hidden>Esperando la cámara…</div>
+
+    <section class="info sobre-video" id="info" hidden>
+      <p class="info-estado"><span class="lampara" id="infoLampara"></span><span id="infoTexto"></span></p>
+      <div class="info-botones">
+        <button class="boton" id="completa">Pantalla completa</button>
+        <button class="boton boton-peligro" id="detener">Detener</button>
+      </div>
+    </section>
+
+    <section class="portada" id="portada">
+      <div class="portada-contenido">
+        <h1>Celular que transmite</h1>
+        <ol class="pasos">
+          <li><span>Toca <b>Empezar</b>: verás lo que filma la cámara.</span></li>
+          <li><span>Abre TikTok, entra a <b>LIVE</b>, elige <b>Gaming para dispositivos móviles</b> e inicia el live.</span></li>
+          <li><span>Vuelve a esta página y no la toques mientras dure el live.</span></li>
+        </ol>
+        <button class="boton boton-principal" id="empezar">Empezar</button>
+      </div>
+    </section>
+
+    <script type="module" src="/transmisor.js"></script>
+  </body>
+</html>
